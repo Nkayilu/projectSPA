@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SPA RDC – Sécurité Pièces Auto | Smart Parts Authentication Platform</title>
+    <meta name="description" content="Plateforme nationale intelligente pour la sécurité, le marquage et la traçabilité des véhicules et pièces de rechange en République Démocratique du Congo." />
+    <!-- Google Fonts: Outfit (headings/numbers), Cinzel (institutional titles), Plus Jakarta Sans (body UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+      window.appLogs = [];
+      window.logApp = (message, data = null) => {
+        const logEntry = {
+          timestamp: new Date().toLocaleTimeString(),
+          message,
+          data: data ? (typeof data === 'object' ? JSON.stringify(data) : String(data)) : null
+        };
+        window.appLogs.push(logEntry);
+        console.log(`[AppLog] ${logEntry.timestamp} - ${message}`, data || '');
+        const event = new CustomEvent('app-log-added', { detail: logEntry });
+        window.dispatchEvent(event);
+      };
+      
+      window.addEventListener('error', (event) => {
+        const errorMsg = `${event.message} at ${event.filename}:${event.lineno}:${event.colno}`;
+        window.logApp('⚠️ ERREUR GLOBALE DÉTECTÉE (index.html): ' + errorMsg, event.error);
+        
+        try {
+          const rootEl = document.getElementById('root');
+          if (rootEl) {
+            rootEl.innerHTML = `
+              <div style="padding: 20px; background: #7F1D1D; color: white; font-family: sans-serif; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box;">
+                <div style="max-width: 500px; width: 100%; background: #1E293B; border-radius: 12px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid #EF4444; box-sizing: border-box;">
+                  <h1 style="font-size: 18px; margin: 0 0 10px 0; color: #EF4444;">⚠️ Erreur de chargement (JS/Réseau)</h1>
+                  <p style="font-size: 13px; color: #94A3B8; line-height: 1.5; margin: 0 0 15px 0;">L'application n'a pas pu démarrer sur cet appareil. Détails ci-dessous :</p>
+                  <div style="background: #0F172A; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; color: #FDA4AF; word-break: break-all; margin-bottom: 15px; max-height: 200px; overflow-y: auto;">
+                    <strong>Message:</strong> ${event.message}<br/>
+                    <strong>Fichier:</strong> ${event.filename}:${event.lineno}:${event.colno}<br/>
+                    <strong>Navigateur:</strong> ${navigator.userAgent}
+                  </div>
+                  <button onclick="window.location.reload()" style="width: 100%; padding: 10px; background: #EF4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px;">Réessayer</button>
+                </div>
+              </div>
+            `;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+      
+      window.addEventListener('unhandledrejection', (event) => {
+        window.logApp('⚠️ PROMESSE GLOBALE REJETÉE: ' + event.reason);
+      });
+      
+      window.logApp('Script de diagnostic précoce chargé.');
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
