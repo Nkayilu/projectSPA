@@ -8,9 +8,9 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
-  getVehicles: () =>
-    fetch(`${API_BASE_URL}/api/vehicles`),
-
+    getVehicles: () =>
+      fetch(`${import.meta.env.VITE_API_URL}/api/vehicles`),
+   
   getCenters: () =>
     fetch(`${API_BASE_URL}/api/centers`),
 };
