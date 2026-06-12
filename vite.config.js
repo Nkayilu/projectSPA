@@ -20,7 +20,7 @@ export default defineConfig({
     // Proxy vers le backend Express pour éviter les problèmes CORS en développement
     proxy: {
       '/api': {
-        target: import.meta.env.VITE_API_URL + "/api",
+        target: 'https://projectspabackend.onrender.com',
         changeOrigin: true,
       },
     },
