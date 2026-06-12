@@ -20,7 +20,7 @@ export default defineConfig({
     // Proxy vers le backend Express pour éviter les problèmes CORS en développement
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        target: import.meta.env.VITE_API_URL + "/api",
         changeOrigin: true,
       },
     },
