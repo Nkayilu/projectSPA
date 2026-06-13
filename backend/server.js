@@ -20,7 +20,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5175';
 
 // URL publique pour les QR Codes (Ngrok ou production)
 // Si non définie, utilise le frontend local (accès QR limité au réseau local)
-let APP_PUBLIC_URL = (process.env.APP_PUBLIC_URL || '').replace(/\/$/, '');
+let APP_PUBLIC_URL = (process.env.APP_PUBLIC_URL || 'https://project-spa-eight.vercel.app').replace(/\/$/, '');
 
 // Détermine si on est en mode développement local
 let IS_LOCAL_DEV = !APP_PUBLIC_URL;
@@ -874,6 +874,40 @@ app.post('/api/config/public-url', authenticate, requirePermission('manage_users
   } catch (err) {
     console.error('💥 POST /api/config/public-url error:', err);
     res.status(500).json({ error: 'Erreur lors de la mise à jour de la configuration : ' + err.message });
+  }
+});
+
+// ======================================================================
+// 10b-bis. RÉGÉNÉRATION DES QR CODES — Route d'administration
+// ======================================================================
+app.post('/api/admin/regenerate-qrcodes', authenticate, requirePermission('manage_users'), async (req, res) => {
+  try {
+    const qrcodes = db.prepare("SELECT * FROM qrcodes").all();
+    let count = 0;
+
+    for (const qr of qrcodes) {
+      const verifyUrl = `${APP_PUBLIC_URL}/verification/${qr.secure_token}`;
+      const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
+        width: 256,
+        margin: 2,
+        color: { dark: '#0A1628', light: '#FFFFFF' }
+      });
+
+      db.prepare("UPDATE qrcodes SET qr_image_data = ? WHERE id = ?").run(qrDataUrl, qr.id);
+      count++;
+    }
+
+    logAudit('QR_CODES_REGENERATED', `Régénération de ${count} QR codes avec la base URL : ${APP_PUBLIC_URL}`, req.user.id, req.ip);
+
+    res.json({
+      success: true,
+      message: `${count} QR codes ont été régénérés avec succès avec la base URL : ${APP_PUBLIC_URL}`,
+      count,
+      baseUrl: APP_PUBLIC_URL
+    });
+  } catch (err) {
+    console.error('💥 POST /api/admin/regenerate-qrcodes error:', err);
+    res.status(500).json({ error: 'Erreur lors de la régénération des QR codes : ' + err.message });
   }
 });
 
