@@ -5,10 +5,7 @@ import {
   Palette, Layers, CheckCircle2, XCircle, AlertCircle,
   BadgeCheck, Building2, RefreshCw, ExternalLink
 } from 'lucide-react';
-
-// API_BASE vide = URLs relatives → passent par le proxy Vite → backend port 4000
-// Cela permet aux téléphones externes (via Ngrok) d'accéder à l'API sans connaître localhost
-const API_BASE = '';
+import { API_BASE } from '../api';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

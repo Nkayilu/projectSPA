@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE } from './api';
 import HomeView from './components/HomeView';
 import VerificationView from './components/VerificationView';
 import LoginView from './components/LoginView';
@@ -19,9 +20,8 @@ import {
   AlertCircle, CheckCircle2, Settings, Info, Users, Globe
 } from 'lucide-react';
 
-// Utilise des URLs relatives pour que le proxy Vite redirige vers le backend
-// Cela fonctionne automatiquement en local ET via Ngrok
-const API_BASE = '';
+// API_BASE est défini dans src/api.js et pointe vers le backend Render en production
+// et vers localhost:4000 en développement local (via .env.local).
 
 export default function App() {
   const [tab, setTab] = useState('home');

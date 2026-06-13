@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Edit, Trash2, User, Mail, Shield, Lock, X, ShieldAlert, CheckCircle2, Loader2, ToggleLeft, ToggleRight, MapPin } from 'lucide-react';
-
-const API_BASE = '';
+import { API_BASE } from '../api';
 
 export default function CrudUsers({ addToast, centers }) {
   const [users, setUsers] = useState([]);

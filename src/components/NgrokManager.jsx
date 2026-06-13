@@ -4,8 +4,7 @@ import {
   AlertTriangle, Copy, ExternalLink, Info, Terminal,
   ChevronRight, Eye, EyeOff, Zap
 } from 'lucide-react';
-
-const API_BASE = '';
+import { API_BASE } from '../api';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

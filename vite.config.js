@@ -17,12 +17,8 @@ export default defineConfig({
     hmr: {
       clientPort: 443,
     },
-    // Proxy vers le backend Express pour éviter les problèmes CORS en développement
-    proxy: {
-      '/api': {
-        target: 'https://projectspabackend.onrender.com',
-        changeOrigin: true,
-      },
-    },
+    // NOTE : Le proxy Vite est supprimé. En production (Vercel), les requêtes
+    // sont dirigées directement vers le backend Render via la variable VITE_API_URL.
+    // En développement local, définir VITE_API_URL=http://localhost:4000 dans .env.local
   },
 })

@@ -4,8 +4,7 @@ import {
   User, Calendar, FileText, MapPin, Download, AlertTriangle, X, Building2,
   Hash, Car, Palette, Layers, CheckCircle2, XCircle, AlertCircle, BadgeCheck
 } from 'lucide-react';
-
-const API_BASE = '';
+import { API_BASE } from '../api';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ShieldCheck, Lock, Mail, Eye, EyeOff, AlertTriangle } from 'lucide-react';
+import { API_BASE } from '../api';
 
 export default function LoginView({ onLogin, addToast }) {
   const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ export default function LoginView({ onLogin, addToast }) {
     setError('');
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

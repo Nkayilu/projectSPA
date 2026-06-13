@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Cpu, QrCode, ShieldAlert, Sparkles, TrendingUp, Users, MapPin, Radio, Activity, Map, RefreshCw, Car } from 'lucide-react';
-
-const API_BASE = '';
+import { API_BASE } from '../api';
 
 export default function AdminDashboard({ vehicles, setTab }) {
   const [stats, setStats] = useState(null);

@@ -23,11 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 
-# Variables d'environnement (contient les clés et URL Ngrok — NE PAS COMMITER)
-.env
-.env.local
-.env.production
-backend/.env
+# Variables d'environnement
+.env                # Fichier générique — NE PAS COMMITER (peut contenir des secrets)
+.env.local          # Dev local — NE PAS COMMITER (remplace .env en local)
+# .env.production est commité intentionnellement : il contient uniquement l'URL publique du backend Render
+backend/.env        # Secrets backend — NE PAS COMMITER
 
 # Base de données SQLite locale (données sensibles)
 backend/*.db
