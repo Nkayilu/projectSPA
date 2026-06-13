@@ -1,10 +1,24 @@
 import { DatabaseSync } from 'node:sqlite';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dbPath = path.resolve(__dirname, '../database/spa_rdc.db');
+
+// En production Render : DB_PATH=/tmp/database.sqlite (défini dans les env vars Render)
+// En développement local : fallback vers le dossier database/ local
+const dbPath = process.env.DB_PATH
+  ? process.env.DB_PATH
+  : path.resolve(__dirname, '../database/spa_rdc.db');
+
+// Créer le répertoire parent si nécessaire (utile pour /tmp)
+const dbDir = path.dirname(dbPath);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
+
+console.log(`📂 SQLite DB Path : ${dbPath}`);
 
 export const db = new DatabaseSync(dbPath);
 

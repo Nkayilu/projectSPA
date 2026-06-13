@@ -18,12 +18,14 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5175';
 
-// URL publique pour les QR Codes (Ngrok ou production)
-// Si non définie, utilise le frontend local (accès QR limité au réseau local)
-let APP_PUBLIC_URL = (process.env.APP_PUBLIC_URL || 'https://project-spa-eight.vercel.app').replace(/\/$/, '');
+// URL publique pour les QR Codes — doit pointer vers le FRONTEND (Vercel)
+// afin que le scan QR ouvre la page de vérification visuelle.
+// En production : APP_PUBLIC_URL=https://project-spa-eight.vercel.app
+// En local      : laisser vide pour utiliser FRONTEND_URL
+let APP_PUBLIC_URL = (process.env.APP_PUBLIC_URL || FRONTEND_URL).replace(/\/$/, '');
 
 // Détermine si on est en mode développement local
-let IS_LOCAL_DEV = !APP_PUBLIC_URL;
+let IS_LOCAL_DEV = APP_PUBLIC_URL.includes('localhost');
 
 
 // Construit l'URL de vérification publique complète pour le QR Code
@@ -1074,12 +1076,10 @@ app.listen(PORT, () => {
   console.log(`=======================================================`);
   console.log(`🦁  SPA RDC Backend v2.1 — PORT : ${PORT}`);
   console.log(`🔗  Frontend URL  : ${FRONTEND_URL}`);
-  if (APP_PUBLIC_URL) {
-    console.log(`🌐  URL Publique  : ${APP_PUBLIC_URL}`);
-    console.log(`📱  QR Scan URL   : ${APP_PUBLIC_URL}/verification/<token>`);
-  } else {
-    console.log(`⚠️   Mode LOCAL   : QR codes pointent vers ${FRONTEND_URL}`);
-    console.log(`💡  Astuce : Définissez APP_PUBLIC_URL dans .env pour activer Ngrok.`);
+  console.log(`🌐  QR Base URL   : ${APP_PUBLIC_URL}`);
+  console.log(`📱  QR Scan URL   : ${APP_PUBLIC_URL}/verification/<token>`);
+  if (IS_LOCAL_DEV) {
+    console.log(`⚠️   Mode LOCAL   : définissez APP_PUBLIC_URL en production.`);
   }
   console.log(`🛡️   Health       : http://localhost:${PORT}/health`);
   console.log(`=======================================================`);
