@@ -1,4 +1,4 @@
-import { DatabaseSync } from 'node:sqlite';
+import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
@@ -20,7 +20,7 @@ if (!fs.existsSync(dbDir)) {
 
 console.log(`📂 SQLite DB Path : ${dbPath}`);
 
-export const db = new DatabaseSync(dbPath);
+export const db = new Database(dbPath);
 
 // Initialiser les tables de la base de données SQLite
 export function initDb() {

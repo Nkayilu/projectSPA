@@ -3,7 +3,7 @@ services:
     name: spa-rdc-backend
     runtime: node
     rootDir: backend
-    buildCommand: npm install
+    buildCommand: rm -rf node_modules package-lock.json && npm install
     startCommand: node server.js
     envVars:
       - key: NODE_VERSION
