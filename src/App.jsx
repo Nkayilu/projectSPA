@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom';
 import { API_BASE } from './api';
 import HomeView from './components/HomeView';
 import VerificationView from './components/VerificationView';
@@ -23,7 +24,7 @@ import {
 // API_BASE est défini dans src/api.js et pointe vers le backend Render en production
 // et vers localhost:4000 en développement local (via .env.local).
 
-export default function App() {
+export function MainAppContent() {
   const [tab, setTab] = useState('home');
   const [adminTab, setAdminTab] = useState('dashboard');
   const [currentUser, setCurrentUser] = useState(null);
@@ -615,5 +616,26 @@ export default function App() {
         </>
       )}
     </div>
+  );
+}
+
+function PublicVerificationWrapper() {
+  const { token } = useParams();
+  return (
+    <div className="app-container" style={{ minHeight: '100vh' }}>
+      <div className="national-stripe" />
+      <PublicVerification token={token} />
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/verification/:token" element={<PublicVerificationWrapper />} />
+        <Route path="/*" element={<MainAppContent />} />
+      </Routes>
+    </Router>
   );
 }

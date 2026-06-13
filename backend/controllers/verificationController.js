@@ -43,7 +43,8 @@ export async function verifyQrToken(req, res) {
         qr.is_active as qr_active,
         qr.qr_image_data,
         qr.secure_token,
-        c.name as center_name
+        c.name as center_name,
+        c.region as center_region
       FROM vehicles v
       JOIN owners o ON v.owner_id = o.id
       LEFT JOIN qrcodes qr ON qr.vehicle_id = v.id
@@ -88,6 +89,7 @@ export async function verifyQrToken(req, res) {
       vehicle_status: record.vehicle_status,
       registered_at: record.registered_at,
       center_name: record.center_name || 'Centre Agréé SPA RDC',
+      center_region: record.center_region || 'Kinshasa',
       qr_image_data: record.qr_image_data,
       secure_token: record.secure_token,
       parts: parts.map(p => ({ name: p.name, id: p.marking_code })),

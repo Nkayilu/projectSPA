@@ -1861,3 +1861,91 @@
   }
 }
 
+/* ================================================================
+ * PRINT STYLES FOR OFFICIAL CERTIFICATES
+ * ================================================================ */
+@media print {
+  /* Reset page backgrounds & colors for clean high-contrast printing */
+  html, body {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 11pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide all generic UI components, buttons, navigation and toast systems */
+  .no-print,
+  button,
+  .btn,
+  .main-header,
+  .main-footer,
+  .workspace-sidebar,
+  .workspace-top-bar,
+  .workspace-footer,
+  .toast-container,
+  .national-stripe,
+  .spinner-loader {
+    display: none !important;
+  }
+
+  /* Expand the main content areas to fill the printable surface */
+  .app-container,
+  .main-content,
+  .workspace-body {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+
+  /* Format the certificate card to match an official physical document */
+  .print-card-wrapper {
+    border: 4px double #0A1428 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 15mm 20mm !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    page-break-inside: avoid !important;
+    position: relative !important;
+  }
+
+  /* Style certificate sections */
+  .print-section-divider {
+    border-bottom: 1px solid #CBD5E1 !important;
+    padding: 1rem 0 !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Force background styling inside sub-boxes */
+  .print-bg-adjust {
+    background-color: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Show the official signature block only when printing */
+  .print-signature-box {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 2rem !important;
+    padding-top: 1rem !important;
+    border-top: 1px dashed #A3B1C2 !important;
+    page-break-inside: avoid !important;
+  }
+}
+
+
