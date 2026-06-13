@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: spa-rdc-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 22.11.0
+      - key: DB_PATH
+        value: /tmp/database.sqlite
+      - key: APP_PUBLIC_URL
+        value: https://project-spa-eight.vercel.app
+      - key: FRONTEND_URL
+        value: https://project-spa-eight.vercel.app
