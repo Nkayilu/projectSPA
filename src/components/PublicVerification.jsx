@@ -235,17 +235,42 @@ function StatusBanner({ status }) {
 
 // ─── Main PublicVerification ─────────────────────────────────────────────────
 
-export default function PublicVerification({ token }) {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export default function PublicVerification({ token, data: propData, loading: propLoading, error: propError }) {
+  const [data, setData] = useState(propData || null);
+  const [loading, setLoading] = useState(propLoading !== undefined ? propLoading : (propData ? false : true));
+  const [error, setError] = useState(propError || null);
   const [consultationTime, setConsultationTime] = useState('');
+
+  // S'assurer que le composant réagit aux changements de props du parent
+  useEffect(() => {
+    if (propData !== undefined) setData(propData);
+  }, [propData]);
+
+  useEffect(() => {
+    if (propLoading !== undefined) setLoading(propLoading);
+  }, [propLoading]);
+
+  useEffect(() => {
+    if (propError !== undefined) setError(propError);
+  }, [propError]);
 
   useEffect(() => {
     setConsultationTime(new Date().toLocaleString('fr-FR', {
       day: 'numeric', month: 'long', year: 'numeric',
       hour: '2-digit', minute: '2-digit', second: '2-digit'
     }));
+
+    if (propData) {
+      window.logApp('PublicVerification monté avec données pré-chargées', propData.plate_number);
+      setData(propData);
+      setLoading(false);
+      return;
+    }
+
+    if (propLoading !== undefined || propError !== undefined) {
+      // Si les états sont contrôlés par le parent, ne pas faire d'appel interne
+      return;
+    }
 
     window.logApp('PublicVerification monté avec le token', token);
     if (!token) {
@@ -255,7 +280,7 @@ export default function PublicVerification({ token }) {
       return;
     }
     fetchVehicle(token);
-  }, [token]);
+  }, [token, propData, propLoading, propError]);
 
   const fetchVehicle = async (tok) => {
     window.logApp('fetchVehicle démarré pour le token', tok);
@@ -277,7 +302,7 @@ export default function PublicVerification({ token }) {
         }
       }
 
-      const requestUrl = `${API_BASE}/api/verify/qr/${encodeURIComponent(tok)}`;
+      const requestUrl = `${API_BASE}/api/public/verification/${encodeURIComponent(tok)}`;
       window.logApp('Appel fetch vers URL', requestUrl);
       
       const res = await fetch(requestUrl, { headers });

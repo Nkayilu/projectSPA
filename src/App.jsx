@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { API_BASE } from './api';
 import HomeView from './components/HomeView';
 import VerificationView from './components/VerificationView';
@@ -12,7 +12,7 @@ import InteractiveMap from './components/InteractiveMap';
 import PoliceConsole from './components/PoliceConsole';
 import RegistrationView from './components/RegistrationView';
 import CrudUsers from './components/CrudUsers';
-import PublicVerification from './components/PublicVerification';
+import PublicVerificationPage from './components/PublicVerificationPage';
 import NgrokManager from './components/NgrokManager';
 
 import { 
@@ -31,8 +31,7 @@ export function MainAppContent() {
   const [toasts, setToasts] = useState([]);
   const [verifyToken, setVerifyToken] = useState('');
 
-  // Mode vérification publique via QR Code scan (/verification/:token)
-  const [publicQrToken, setPublicQrToken] = useState(null);
+
 
   // ====================================================================
   // Toast System
@@ -268,19 +267,6 @@ export function MainAppContent() {
       window.logApp('Aucun utilisateur connecté trouvé dans localStorage');
     }
 
-    // Détecter une URL de vérification publique via QR Code
-    // Format : /verification/<token>  (généré par Ngrok / production)
-    const pathname = window.location.pathname;
-    window.logApp('Détection route publique - pathname: ' + pathname);
-    const verificationMatch = pathname.match(/^\/verification\/(.+)$/);
-    if (verificationMatch) {
-      const token = decodeURIComponent(verificationMatch[1]);
-      window.logApp('Match route verification avec token', token);
-      setPublicQrToken(token);
-      return; // Ne pas traiter d'autres paramètres URL
-    } else {
-      window.logApp('Chemin standard, pas de match /verification/:token');
-    }
 
     // Gérer le paramètre QR token dans l'URL (mode legacy : /?tab=verify&token=...)
     const params = new URLSearchParams(window.location.search);
@@ -345,17 +331,6 @@ export function MainAppContent() {
   // RENDER
   // ====================================================================
 
-  // Mode vérification publique : QR Code scanné depuis un téléphone via Ngrok
-  // L'URL est /verification/<token> — affichage sans login requis
-  if (publicQrToken) {
-    window.logApp('Rendu: Mode PublicVerification (QR scanné) avec le token', publicQrToken);
-    return (
-      <div className="app-container" style={{ minHeight: '100vh' }}>
-        <div className="national-stripe" />
-        <PublicVerification token={publicQrToken} />
-      </div>
-    );
-  }
 
   window.logApp('Rendu: Mode Principal. Utilisateur: ' + (currentUser ? currentUser.name : 'anonyme') + ', Tab: ' + tab);
 
@@ -619,21 +594,11 @@ export function MainAppContent() {
   );
 }
 
-function PublicVerificationWrapper() {
-  const { token } = useParams();
-  return (
-    <div className="app-container" style={{ minHeight: '100vh' }}>
-      <div className="national-stripe" />
-      <PublicVerification token={token} />
-    </div>
-  );
-}
-
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/verification/:token" element={<PublicVerificationWrapper />} />
+        <Route path="/verification/:token" element={<PublicVerificationPage />} />
         <Route path="/*" element={<MainAppContent />} />
       </Routes>
     </Router>
